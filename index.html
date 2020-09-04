@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChartEX dashboard</title>
+
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 1rem;
+        background-color: #181818;
+        color: white;
+        font-family: Graphik, sans-serif;
+      }
+
+      .header {
+        display: flex;
+        justify-items: self-end;
+        justify-content: space-between;
+      }
+      
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+        width: 100%;
+        grid-gap: 1rem;
+        place-items: center;
+      }
+  
+      .coin-card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        background-color: #262323;
+        background-clip: border-box;
+        border: 1px solid #2c2727;
+        border-radius: .25rem;
+      }
+
+      .coin-card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .coin-card-body .icon-container {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      .coin-card-body .icon {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="https://chartex.wijzijnbijnaklaar.nl/wp-content/uploads/2020/08/BlueLogo.png"></img>
+      <div>
+        <h1>Top movers crypto</h1>
+        <h4>Over $100k 24h volume and over 100 trades</h4>
+      </div>
+    </div>
+
+    <div id="root"></div>
+  </body>
+
+  <script>
+    fetch("/UniswapAllMarketsGainers.json")
+      .then((res) => res.json())
+      .then((coins) => {
+        const cardGrid = document.createElement("div");
+        cardGrid.classList.add("card-grid");
+        cardGrid.innerHTML = coins.map(createCoinCard).join("\n");
+        document.body.appendChild(cardGrid);
+
+        // lastprice: 82.0394
+        // liquidity: 0
+        // logo: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x8D7dB6A562764b437F3248031F886359b4183cc4/logo.png"
+        // price24hrsago: 14.8756
+        // price24hrsperc: 451.5
+        // symbol: "SSS"
+        // tokenid: "0x8d7db6a562764b437f3248031f886359b4183cc4"
+        // trades: 1612
+        // trades24hrsago: 65
+        // trades24hrsperc: 2380
+        // volume: 1537530
+        // volume24hrsago: 7178.71
+        // volume24hrsperc: 21317.91
+        function createCoinCard(coin) {
+          const symbolWithDollar = "$" + coin.symbol.replace("$", "");
+
+          return `<div class="coin-card">
+            <div class="coin-card-body">
+              <div class="icon-container">
+                <img class="icon" src="${coin.logo}"></img>
+              </div>
+              <div class="symbol">${symbolWithDollar}</div>
+              <div class="price">${coin.lastprice}</div>
+              <div class="change">${coin.price24hrsperc}</div>
+            </div>
+          </div>`;
+        }
+      });
+  </script>
+
+  
+</html>
