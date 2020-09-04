@@ -8,24 +8,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style type="text/css">
       :root {
-        --baseColor: #1c2226;
-        --textColor: #ffffff;
         --text-soft: #85919b;
         --text-green: #00be22;
         --text-red: #eb5757;
-        --radius: 0.25rem;
       }
 
       body {
         margin: 0;
         font-family: 'Kumbh Sans', sans-serif;
-        background-color: var(--baseColor);
-        color: var(--textColor);
+        background-color: #090d19;
+        color: #ffffff;
         position: relative;
       }
 
       .bg-image {
-        background-image: url("/background.jpg");
+        background-image: url("./background.jpg");
         background-repeat: repeat;
         background-size: 100%;
         height: 100%;
@@ -139,7 +136,7 @@
     <div class="bg-image"></div>
 
     <header>
-      <img class="logo" src="/ChartEx-Dark.svg"></img>
+      <img class="logo" src="./ChartEx-Dark.svg"></img>
       <div>
         <h1 class="title">Crypto top movers</h1>
         <h4 class="subtitle">Over $100k 24h volume and over 100 trades</h4>
@@ -151,7 +148,7 @@
 
   <script>
     const fallbackIcon = "https://images.emojiterra.com/twitter/512px/1f911.png"
-    const marketGainersJsonUrl = "/UniswapAllMarketsGainers.json"
+    const marketGainersJsonUrl = "./UniswapAllMarketsGainers.json"
 
     fetch(marketGainersJsonUrl)
       .then((res) => res.json())
