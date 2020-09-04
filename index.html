@@ -4,25 +4,59 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChartEX dashboard</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style type="text/css">
-      body {
-        margin: 0;
-        padding: 1rem;
-        background-color: #181818;
-        color: white;
-        font-family: Graphik, sans-serif;
+      :root {
+        --baseColor: #1c2226;
+        --textColor: #c1c8ce;
+        --text-soft: #85919b;
+        --text-green: #00be22;
+        --text-red: #eb5757;
+        --radius: 0.25rem;
       }
 
-      .header {
+      body {
+        margin: 0;
+        padding: 3rem 2rem;
+        font-family: 'Kumbh Sans', sans-serif;
+        background-color: var(--baseColor);
+        color: var(--textColor);
+      }
+
+      header {
         display: flex;
         justify-items: self-end;
         justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+      header .logo {
+        margin-right: 2rem;
+        max-width: 14rem;
+        object-fit: contain;
+      }
+      header .title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-align: right;
+        font-size: 2.75rem;
+        color: transparent;
+        background: linear-gradient( to left, #8f9ebb, #9ba2af);
+        background-size: 100% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+      }
+      header .subtitle {
+        color: var(--text-soft);
+        margin-top: 0.5rem;
+        font-weight: 400;
+        font-size: 0.85rem;
+        text-align: right;
       }
       
       .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         width: 100%;
         grid-gap: 1rem;
         place-items: center;
@@ -32,46 +66,88 @@
         width: 100%;
         height: 100%;
         display: flex;
-        background-color: #262323;
-        background-clip: border-box;
-        border: 1px solid #2c2727;
-        border-radius: .25rem;
+        border-radius: 14px;
+        overflow: hidden;
+        /* Neumporh shadows */
+        background: #1c2226;
+        box-shadow:  6px 6px 3px #191e22, 
+          -6px -6px 3px #1f262a;
       }
 
       .coin-card-body {
         flex: 1 1 auto;
         min-height: 1px;
-        padding: 1.25rem;
+        padding: 1rem;
         display: flex;
         flex-direction: column;
         width: 100%;
       }
 
+      .coin-card-body .header {
+        flex: auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 0.75rem;
+      }
       .coin-card-body .icon-container {
-        width: 50px;
-        height: 50px;
+        --icon-size: 30px;
+        width: var(--icon-size);
+        height: var(--icon-size);
         border-radius: 50%;
         overflow: hidden;
+        margin-right: 0.75rem;
+      }
+      .coin-card-body .symbol {
+        word-break: break-word;
+        line-height: 20px;
+      }
+      .coin-card-body .symbol .dollar {
+        /* color: var(--text-soft); */
+      }
+      .coin-card-body .symbol .text {
+        font-weight: 600;
       }
       .coin-card-body .icon {
         max-width: 100%;
+      }
+      .coin-card-body .change {
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+      .coin-card-body .change.up {
+        color: var(--text-green)
+      }
+      .coin-card-body .change.down {
+        color: var(--text-red)
+      }
+      .coin-card-body .change .fa-angle-double-up,
+      .coin-card-body .change .fa-angle-double-down {
+        font-size: 120%;
+      }
+      .coin-card-body .price {
+        font-size: 80%;
+        margin-top: 0.25rem;
+        color: var(--text-soft);
       }
     </style>
   </head>
 
   <body>
-    <div class="header">
-      <img src="https://chartex.wijzijnbijnaklaar.nl/wp-content/uploads/2020/08/BlueLogo.png"></img>
+    <header>
+      <img class="logo" src="https://chartex.wijzijnbijnaklaar.nl/wp-content/uploads/2020/08/BlueLogo.png"></img>
       <div>
-        <h1>Top movers crypto</h1>
-        <h4>Over $100k 24h volume and over 100 trades</h4>
+        <h1 class="title">Crypto top movers</h1>
+        <h4 class="subtitle">Over $100k 24h volume and over 100 trades</h4>
       </div>
-    </div>
+    </header>
 
     <div id="root"></div>
   </body>
 
   <script>
+    const fallbackIcon = "https://images.emojiterra.com/twitter/512px/1f911.png"
+
     fetch("/UniswapAllMarketsGainers.json")
       .then((res) => res.json())
       .then((coins) => {
@@ -94,19 +170,39 @@
         // volume24hrsago: 7178.71
         // volume24hrsperc: 21317.91
         function createCoinCard(coin) {
-          const symbolWithDollar = "$" + coin.symbol.replace("$", "");
+          if (coin.symbol.startsWith("$")) coin.symbol = coin.symbol.replace("$", "")
 
           return `<div class="coin-card">
             <div class="coin-card-body">
-              <div class="icon-container">
-                <img class="icon" src="${coin.logo}"></img>
+              <div class="header">
+                <div class="icon-container">
+                  <img 
+                    class="icon"
+                    src="${coin.logo}"
+                    onerror='this.onerror = null; this.src="${fallbackIcon}"'
+                  ></img>
+                </div>
+                <div class="symbol">
+                  <span class="dollar">$</span><span class="text">${coin.symbol}</span>
+                </div>
               </div>
-              <div class="symbol">${symbolWithDollar}</div>
-              <div class="price">${coin.lastprice}</div>
-              <div class="change">${coin.price24hrsperc}</div>
+              
+              <div class="change ${
+                coin.price24hrsperc > 0 ? "up" : 
+                coin.price24hrsperc < 0 ? "down" : ""}">
+                <span>
+                  ${coin.price24hrsperc > 0 ? "+" : ""}${coin.price24hrsperc.toFixed(2)}%
+                </span>
+              </div>
+              <div class="price">$${coin.lastprice.toFixed(2)}</div>
             </div>
           </div>`;
         }
+
+        // ${coin.price24hrsperc > 0 
+        //           ? `<i class="fa fa-angle-double-up"></i>`
+        //           : `<i class="fa fa-angle-double-down"></i>`
+        //         }
       });
   </script>
 
