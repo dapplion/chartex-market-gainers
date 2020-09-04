@@ -9,7 +9,7 @@
     <style type="text/css">
       :root {
         --baseColor: #1c2226;
-        --textColor: #c1c8ce;
+        --textColor: #ffffff;
         --text-soft: #85919b;
         --text-green: #00be22;
         --text-red: #eb5757;
@@ -18,17 +18,28 @@
 
       body {
         margin: 0;
-        padding: 3rem 2rem;
         font-family: 'Kumbh Sans', sans-serif;
         background-color: var(--baseColor);
         color: var(--textColor);
+        position: relative;
+      }
+
+      .bg-image {
+        background-image: url("/background.jpg");
+        background-repeat: repeat;
+        background-size: 100%;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: -1;
+        min-height: 100vh;
       }
 
       header {
         display: flex;
         justify-items: self-end;
         justify-content: space-between;
-        margin-bottom: 2rem;
+        padding: 3rem 2rem;
       }
       header .logo {
         margin-right: 2rem;
@@ -40,11 +51,7 @@
         margin-bottom: 0.5rem;
         text-align: right;
         font-size: 2.75rem;
-        color: transparent;
-        background: linear-gradient( to left, #8f9ebb, #9ba2af);
-        background-size: 100% 100%;
-        background-clip: text;
-        -webkit-background-clip: text;
+        opacity: 0.9;
       }
       header .subtitle {
         color: var(--text-soft);
@@ -57,9 +64,9 @@
       .card-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        width: 100%;
         grid-gap: 1rem;
         place-items: center;
+        margin: 0 2rem;
       }
   
       .coin-card {
@@ -69,14 +76,12 @@
         border-radius: 14px;
         overflow: hidden;
         /* Neumporh shadows */
-        background: #1c2226;
-        box-shadow:  6px 6px 3px #191e22, 
-          -6px -6px 3px #1f262a;
+        background: #0b1020;
+        box-shadow: 4px 4px 3px #191c22ed, -3px -3px 3px #1f212b;
       }
 
       .coin-card-body {
         flex: 1 1 auto;
-        min-height: 1px;
         padding: 1rem;
         display: flex;
         flex-direction: column;
@@ -101,9 +106,6 @@
       .coin-card-body .symbol {
         word-break: break-word;
         line-height: 20px;
-      }
-      .coin-card-body .symbol .dollar {
-        /* color: var(--text-soft); */
       }
       .coin-card-body .symbol .text {
         font-weight: 600;
@@ -134,8 +136,10 @@
   </head>
 
   <body>
+    <div class="bg-image"></div>
+
     <header>
-      <img class="logo" src="https://chartex.wijzijnbijnaklaar.nl/wp-content/uploads/2020/08/BlueLogo.png"></img>
+      <img class="logo" src="/ChartEx-Dark.svg"></img>
       <div>
         <h1 class="title">Crypto top movers</h1>
         <h4 class="subtitle">Over $100k 24h volume and over 100 trades</h4>
@@ -147,8 +151,9 @@
 
   <script>
     const fallbackIcon = "https://images.emojiterra.com/twitter/512px/1f911.png"
+    const marketGainersJsonUrl = "/UniswapAllMarketsGainers.json"
 
-    fetch("/UniswapAllMarketsGainers.json")
+    fetch(marketGainersJsonUrl)
       .then((res) => res.json())
       .then((coins) => {
         const cardGrid = document.createElement("div");
@@ -198,13 +203,6 @@
             </div>
           </div>`;
         }
-
-        // ${coin.price24hrsperc > 0 
-        //           ? `<i class="fa fa-angle-double-up"></i>`
-        //           : `<i class="fa fa-angle-double-down"></i>`
-        //         }
       });
   </script>
-
-  
 </html>
